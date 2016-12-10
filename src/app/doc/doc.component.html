@@ -1,0 +1,183 @@
+<div class="ui container">
+  <h3>Introduction</h3>
+  <p>Algoritma OTP merupakan algoritma berjenis symmetric key yang artinya
+    bahwa kunci yang digunakan untuk melakukan enkripsi dan dekripsi merupakan
+    kunci yang sama. Dalam proses enkripsi, algoritma ini menggunakan cara
+    stream cipher dimana cipher berasal dari hasil XOR antara bit plaintext
+    dan bit key. <br><br>
+
+    Sebagai tambahan, algoritma ini sering digunakan dalam proses enkripsi
+    cookie (termasuk pemrosesan transaksi online menggunakan kartu kredit)
+    karena prosesnya yang relatif mudah.</p>
+  <br>
+  <h3>Beberapa Persyaratan Dalam menggunakan OTP</h3>
+  <ol class="ui ordered list">
+    <li class="item">Pemilihan kunci harus dilakukan secara acak agar tidak mudah diterka.</li>
+    <li class="item">Jumlah karakter kunci harus sepanjang karakter plaintext.</li>
+    <li class="item">Kunci harus digunakan hanya 1 kali enkripsi.</li>
+  </ol>
+  <br>
+  <h3>Skenerio</h3>
+  <ol class="ui ordered list">
+
+    <li class="item">Alice dan Bob bersepakat menggunakan sebuah kunci untuk mengenkrip
+      dan mendekrip pesan yang dihasilkan secara acak.</li>
+    <li class="item">Kunci yang dihasilkan kemudian digunakan untuk mengenkrip pesan dari
+      Bob kepada Alice.</li>
+    <li class="item">Alice mendekrip pesan dari bob dengan menggunakan kunci yang telah
+      mereka sepakati sehingga pesan sebenarnya bisa terbaca.</li>
+  </ol>
+  <br>
+  <h3>Konsep</h3>
+  <p>Fungsi untuk mengenkrip pesan hanyalah meng-XOR-kan plaintext dengan kunci
+    yang telah disiapkan untuk menghasilkan ciphertext
+  </p>
+
+  c = p XOR K
+  <br><br>
+  <p>Sedangkan fungsi untuk mendekrip tinggal meng-XOR-kan ciphertext dengan kunci
+    yang sudah disepakati
+  </p>
+
+  p = c XOR K
+  <br><br>
+  <b>Contohnya :</b>
+  <br>
+  Saya memiliki sebuah plaintext yaitu RUSDI dan memiliki sebuah kunci yaitu
+  CRASH (ingat panjang kunci harus sama dengan plaintext dan sebaiknya tidak
+  ada karakter yang diulang).
+  <br>
+  Pertama kita harus mendapatkan kode ASCII dari plaintext kemudian diubah
+  ke bentuk biner
+
+<pre>
+  -----------------------------------
+  | Karakter | ASCII | Notasi biner |
+  -----------------------------------
+  | R        | 82    | 0101 0010    |
+  | U        | 85    | 0101 0101    |
+  | S        | 83    | 0101 0011    |
+  | D        | 68    | 0100 0100    |
+  | I        | 73    | 0100 1001    |
+  -----------------------------------
+</pre>
+  Hal yang sama juga harus dilakukan pada kunci yang dipilih.
+<pre>
+
+
+  -----------------------------------
+  | Karakter | ASCII | Notasi biner |
+  -----------------------------------
+  | C        | 67    | 0100 0011    |
+  | R        | 82    | 0101 0010    |
+  | A        | 65    | 0100 0001    |
+  | S        | 83    | 0101 0011    |
+  | H        | 72    | 0100 1000    |
+  -----------------------------------
+</pre>
+
+  Setelah itu masing-masing karakter di XOR-kan dengan Key
+<pre>
+  R = 0101 0010  U = 0101 0101  S = 0101 0011  D = 0100 0100  I = 0100 1001
+  C = 0100 0011  R = 0101 0010  A = 0100 0001  S = 0101 0011  H = 0100 1000
+  XOR -------------------------------------------------------------------------
+  Cipher: 0001 0001      0000 0111      0001 0010      0001 0111      0000 0001
+  -----------------------------------------------------------------------------
+  ASCII : Ctrl-Q         Ctrl-G         Ctrl-R         Ctrl-W         Ctrl-A
+</pre>
+  Proses dekripsi pesan juga melakukan operasi yang sama yaitu XOR antara Cipher
+  dengan key.
+
+<pre>
+  Cipher: 0001 0001      0000 0111      0001 0010      0001 0111      0000 0001
+  Key:    0100 0011      0101 0010      0100 0001      0101 0011      0100 1000
+  XOR -------------------------------------------------------------------------
+  Plain : 0101 0010      0101 0101      0101 0011      0100 0100      0100 1001
+  -----------------------------------------------------------------------------
+  ASCII :    R              U              S              D              I
+</pre>
+
+  <h3>Apakah OTP aman?</h3>
+
+  Untuk menjawab pertanyaan di atas, berikut penjelasannya. Jika kita
+  mendapatkan sebuah cipher yaitu 0001 0001 maka kita tidak akan pernah bisa
+  memastikan bahwa plaintext-nya adalah R [lihat contoh di atas].
+  <br><br>
+  Sebagai pembuktian menurut teori probabilitas:
+  <br><br>
+  <ol class="ui ordered list">
+
+    <li class="item">Probabilitas sebuah bit kunci berupa 1 atau 0 adalah 1/2
+      (bisa 1 atau 0 dari 1 dan 0 [1/2])</li>
+    <li class="item">Dari teori di atas dapat menyebabkan plaintext tidak seimbang atau
+      memiliki banyak kemungkinan.</li>
+    <li class="item">ASekarang waktunya kita buat persamaan matematis.
+      <br>
+      Kita memberikan nilai x untuk kemungkinan munculnya 0 dan 1-x
+      untuk kemunculan 1 dan selanjutnya perhatikan tabel di bawah ini :<br>
+
+      <pre>
+  -------------------------------------
+  | p   prob | k   prob | c   prob    |    p = plaintext
+  -------------------------------------    k = key (kunci)
+  | 0    x   | 0    1/2 | 0   1/2(x)  |    c = ciphertext = p XOR k
+  | 0    x   | 1    1/2 | 1   1/2(x)  | prob = probabilitas
+  | 1   1-x  | 0    1/2 | 1   1/2(1-x)|
+  | 1   1-x  | 1    1/2 | 0   1/2(1-x)|
+  -------------------------------------
+</pre></li>
+    <li class="item">
+      Dari tabel probabilitas di atas dapat diperoleh sebuah persamaan
+      tentang probabilitas dari bit ciphertext yang menyebabkan ciphertext
+      tampak seperti sebuah random sequence (urutan acak) :
+      <br>
+      <br>
+      1/2(x) + 1/2(1-x) = 1/2
+      <br>
+      <br>
+      untuk membuktikan persamaan di atas adalah benar kita utak-atik
+      sedikit untuk membuktikannya.
+      <br>
+      <br>
+      Pindahkan 1/2(x) ke ruas kanan:
+      <br>
+      <br>
+      1/2(1-x) = 1/2 - 1/2(x)
+      <br>
+      <br>
+      Faktorkan nilai 1/2 di ruas kanan:
+      <br>
+      <br>
+      1/2(1-x) = 1/2(1-x)
+      <br>
+      <br>
+    </li>
+  </ol>
+
+  <h3>Penutup</h3>
+
+  Pada akhirnya, meskipun OTP dinyatakan aman sempurna akan tetapi sebenarnya
+  ada beberapa kelemahan dari algoritma ini :
+  <br><br>
+  <ol class="ui ordered list">
+
+    <li class="item">Panjang kunci harus sama dengan plaintext. Hal ini menyebabkan
+      apabila plaintext semakin panjang maka keamanannya semakin berkurang.</li>
+    <li class="item">Jika sebuah kunci telah digunakan maka kita tidak boleh lagi
+      menggunakan kunci yang sama. Coba kita hitung berapa kombinasi kunci
+      yang kita miliki, semisal dari 255 karakter ASCII maka kita memiliki
+      255 (faktorial) kombinasi kunci. Seandainya kita telah menggunakan
+      sebuah kunci maka kita tidak boleh menggunakan kunci yang sama dan
+      jika kombinasi yang kita miliki telah kadaluarsa [baca:habis] mau
+      tidak mau kita tidak bisa menggunakan OTP lagi (karena jika kita tetap
+      menggunakannya keamanan pesan menjadi berkurang dan akan hilang).</li>
+  </ol>
+
+
+  <h3>Sumber</h3>
+  <a href="http://ezine.echo.or.id/ezine14/04_Algoritma_Enkripsi_One_Time_Pad.txt">http://ezine.echo.or.id/ezine14/04_Algoritma_Enkripsi_One_Time_Pad.txt</a>
+
+
+
+</div>
+<br><br><br>

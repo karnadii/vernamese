@@ -1,0 +1,116 @@
+
+<div class=" ui container">
+  <div class="row">
+    <h3>Vernam (One-Time-Pad) Cipher</h3>
+    <p>
+      Algoritma OTP merupakan algoritma berjenis symmetric key yang artinya
+      bahwa kunci yang digunakan untuk melakukan enkripsi dan dekripsi merupakan
+      kunci yang sama. Dalam proses enkripsi, algoritma ini menggunakan cara
+      stream cipher dimana cipher berasal dari hasil XOR antara bit plaintext
+      dan bit key.
+    </p>
+    <div class="ui section divider"></div>
+    <div class="ui form">
+      <div class="two field">
+        <div class="field">
+          <h3>Mode</h3>
+          <select #Mode class="ui search dropdown" placeholder="Pilih mode...">
+            <option value="0">Character</option>
+            <option value="2">Binary</option>
+            <option value="8">Octal</option>
+            <option value="10">Decimal</option>
+            <option value="16">Hexadecimal</option>
+          </select>
+        </div>
+        <!--Input keystream-->
+        <div class="field">
+          <h3>
+            Keystream
+            <!--String counter-->
+            <div *ngIf="Keystream" class="ui pink label mini">
+              {{Keystream.length}}
+            </div>
+            <!--Error message-->
+            <div *ngIf="keyErr" class="ui pointing below red basic label">
+              Please enter a keystream...
+            </div>
+            <!--Error message-->
+            <div *ngIf="plNkeyErr" class="ui pointing below red basic label">
+              Key stream must be as long as or longer than plaintext...
+            </div>
+          </h3>
+          <div class="ui action input">
+            <input type="text" placeholder="Input your key here..." [(ngModel)]="Keystream">
+            <!--Generator key button-->
+            <button class="ui teal right labeled icon button" (click)="getKeystream(Mode.value)">
+              <i class="key icon"></i>
+              Generate Key
+            </button>
+          </div>
+        </div>
+      </div>
+      <!--Mode select field-->
+
+
+      <div class="two fields">
+        <!--Plaintext Textarea-->
+        <div class="field ">
+          <h3>Plaintext
+            <!--String Counter-->
+            <div *ngIf="Plaintext" class="ui pink label mini">
+              {{Plaintext.length}}
+            </div>
+            <!--Error message-->
+            <div *ngIf="plainErr" class="ui pointing below red basic label">
+              Please enter a plaintext to encrypt...
+            </div>
+          </h3>
+          <div class="field">
+            <textarea placeholder="Input your plaintext here..." rows="12" [(ngModel)]="Plaintext"></textarea>
+          </div>
+
+        </div>
+
+        <!-- Ciphertext textrarea-->
+        <div class="field">
+          <h3>Ciphertext
+            <div *ngIf="Ciphertext" class="ui pink label mini">
+              {{Ciphertext.length}}
+            </div>
+            <div *ngIf="CipErr" class="ui pointing below red basic label">
+              Please enter a ciphertext to decrypt...
+            </div>
+            <div *ngIf="cipNkeyErr" class="ui pointing below red basic label">
+              Key stream must be as long as or longer than ciphertext...
+            </div>
+          </h3>
+          <div class="field">
+            <select #cipMode class="ui search dropdown" (change)="changeMode(cipMode.value)">
+
+              <option value="0">Character</option>
+              <option value="2">Binary</option>
+              <option value="8">Octal</option>
+              <option value="10">Decimal</option>
+              <option value="16">Hexadecimal</option>
+
+            </select>
+          </div>
+          <br>
+          <div class="field">
+            <textarea placeholder="Input your ciphertext here..."  [(ngModel)]="Ciphertext"></textarea>
+          </div>
+        </div>
+      </div>
+      <!-- Button Encrypt Decrypt-->
+      <div class="field center aligned">
+        <div class="teal ui buttons">
+          <button class="ui button" (click)="Encrypt(Mode.value)">Encrypt</button>
+          <div class="or"></div>
+          <button class="ui button" (click)="Decrypt(Mode.value,cipMode.value)">Decrypt</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<br><br>

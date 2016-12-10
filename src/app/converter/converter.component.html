@@ -1,0 +1,21 @@
+
+<div class="ui form container">
+  <h3>Character to biner converter</h3>
+  <div class="two fields">
+    <div class="field">
+      <label>Ascii Character</label>
+      <textarea [(ngModel)]="Character"></textarea>
+    </div>
+    <div class="field">
+      <label>Binary</label>
+      <textarea [(ngModel)]="Biner"></textarea>
+    </div>
+  </div>
+  <div class="field">
+    <div class="teal ui buttons">
+      <button class="ui button" (click)="charToBin(Character)">Convert to binary</button>
+      <div class="or"></div>
+      <button class="ui button" (click)="binToChar(Biner)">Convert to Character</button>
+    </div>
+  </div>
+</div>
